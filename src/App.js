@@ -1,10 +1,10 @@
 import React from 'react';
-import './App.css';
+import JoinBlock from "./components/joinBlock";
 
 function App() {
   return (
-    <div className="App">
-
+    <div className="wrapper">
+      <JoinBlock/>
     </div>
   );
 }
