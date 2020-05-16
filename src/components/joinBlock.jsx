@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import socket from '../socket';
 import axios from 'axios';
 
 const JoinBlock = ({ onLogin }) => {
   const [ roomId, setRoomID ] = useState('');
   const [ userName, setUserName ] = useState('');
-  const [isLoading, setLoading ] = useState(false);
+  const [ isLoading, setLoading ] = useState(false);
 
   const waitForLogin = function() {
      return setTimeout(onLogin, 3000)
@@ -15,12 +14,9 @@ const JoinBlock = ({ onLogin }) => {
     if (!roomId || !userName) {
       return alert('Неверные данные');
     }
+    const data = { roomId, userName }
     setLoading(true);
-    await axios.post('/rooms', {
-        roomId,
-        userName
-      }
-    );
+    await axios.post('/rooms', data)
     waitForLogin()
   };
 

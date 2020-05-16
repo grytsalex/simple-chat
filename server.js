@@ -29,6 +29,10 @@ app.post('/rooms', (req, res) => {
 })
 
 io.on('connection', (socket) => {  // когда к socket_ам подключится user выводим в console оповещение
+    socket.on('ROOM:JOIN', (data) => { // когда прийдет socket action, выполнится функция
+      console.log(data)
+    })
+
     console.log('user connected', socket.id)
 });
 
