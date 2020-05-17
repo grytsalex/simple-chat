@@ -7,23 +7,28 @@ import reducer from './useReducer';
 function App() {
 
   const [state, dispatch] = useReducer(reducer, {
-    joined: false
+    joined: false,
+    roomId: null,
+    userName: null,
   });
 
-  const onLogin = () => {
+  const onLogin = (data) => {
     dispatch({
       type: 'JOINED',
-      payload: true
+      payload: data,
     });
-    socket.emit('ROOM:JOIN', {
-      roomId,
-      userName
-    })
-  }
+    socket.emit('ROOM:JOIN', data);
+  };
+
+  socket.on('ROOM:JOINED', users => {
+    console.log("New user", users);
+  });
+
+  window.socket = socket;
 
   return (
     <div className="wrapper">
-      {state.joined === false ? <JoinBlock onLogin={onLogin}/> : <div onSendRoomData={onSendRoomData}>We are authorise</div>}
+      {state.joined === false ? <JoinBlock onLogin={onLogin}/> : <div>We are authorise</div>}
     </div>
   );
 }

@@ -6,10 +6,6 @@ const JoinBlock = ({ onLogin }) => {
   const [ userName, setUserName ] = useState('');
   const [ isLoading, setLoading ] = useState(false);
 
-  const waitForLogin = function() {
-     return setTimeout(onLogin, 3000)
-  }
-
   const onEnter = async () => {
     if (!roomId || !userName) {
       return alert('Неверные данные');
@@ -17,7 +13,7 @@ const JoinBlock = ({ onLogin }) => {
     const data = { roomId, userName }
     setLoading(true);
     await axios.post('/rooms', data)
-    waitForLogin()
+    onLogin(data)
   };
 
     return(
