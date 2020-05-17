@@ -1,10 +1,11 @@
-import React, {useEffect, useReducer} from 'react';
+import React, { memo, useEffect, useReducer } from 'react';
 import socket from './socket';
 
 import JoinBlock from "./components/joinBlock";
 import reducer from './reducer';
+import Chat from "./components/Chat";
 
-function App() {
+const App = () => {
 
   const [state, dispatch] = useReducer(reducer, {
     joined: false,
@@ -20,7 +21,7 @@ function App() {
     socket.emit('ROOM:JOIN', data);
   };
 
-  useEffect(() => {
+  useEffect(() => { // позволяет не создавать данный обработчик после каждого render()
     socket.on('ROOM:JOINED', users => {
       console.log("New user", users);
     });
@@ -30,9 +31,9 @@ function App() {
 
   return (
     <div className="wrapper">
-      {state.joined === false ? <JoinBlock onLogin={onLogin}/> : <div>We are authorise</div>}
+      {state.joined === false ? <JoinBlock onLogin={onLogin}/> : <Chat/>}
     </div>
   );
 }
 
-export default App;
+export default memo(App);
