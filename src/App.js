@@ -1,8 +1,8 @@
-import React, { useReducer } from 'react';
+import React, {useEffect, useReducer} from 'react';
 import socket from './socket';
 
 import JoinBlock from "./components/joinBlock";
-import reducer from './useReducer';
+import reducer from './reducer';
 
 function App() {
 
@@ -20,9 +20,11 @@ function App() {
     socket.emit('ROOM:JOIN', data);
   };
 
-  socket.on('ROOM:JOINED', users => {
-    console.log("New user", users);
-  });
+  useEffect(() => {
+    socket.on('ROOM:JOINED', users => {
+      console.log("New user", users);
+    });
+  })
 
   window.socket = socket;
 

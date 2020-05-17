@@ -1,9 +1,7 @@
 const express = require('express'); // подключается express
 const app = express(); // создаеться express приложение
-const server = require('http').Server(app); //  создаеться http server
+const server = require('http').createServer(app); //  создаеться http server
 const io =  require('socket.io')(server); // создаеться socket который будет работать через http server
-const socket = io();
-console.log(typeof(io))
 
 app.use(express.json())
 
@@ -27,21 +25,18 @@ app.post('/rooms', (req, res) => {
         res.send(); // в ответе прийдет значение
 })
 
-
-socket.status;
-
 io.on('connection', (socket) => {  // когда к socket_ам подключится user выводим в console оповещение
     socket.on('ROOM:JOIN', ({ roomId, userName }) => { // когда прийдет socket action, выполнится функция
         socket.join(roomId);
-        rooms.get(roomId).get('users').socket(socket.id, userName);
-        const users = rooms.get(roomId).get('users').values();
+        rooms.get(roomId).get('users').set(socket.id, userName);
+        const users = [...rooms.get(roomId).get('users').values()];
         socket.to(roomId).broadcast.emit('ROOM:JOINED', users);
     });
 
     console.log('user connected', socket.id)
 });
 
-app.listen(5000, (err) => { // приложение будет работать через port
+server.listen(5000, (err) => { // приложение будет работать через port
     if (err) {
         throw Error(err);
     }
