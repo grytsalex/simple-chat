@@ -20,7 +20,7 @@ const JoinBlock = ({ onLogin }) => {
         <div className="join-block">
             <input
               type="text"
-              placeholder="Room ID"
+              placeholder="ID комнаты"
               value={roomId} // затем значение из state попадает как value в input
               onChange={(event) => setRoomID(event.target.value)} // сначала значение по onChange попадает в переменную в state
             />
