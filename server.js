@@ -4,16 +4,15 @@ const server = require('http').createServer(app); //  создаеться http 
 const io =  require('socket.io')(server); // создаеться socket который будет работать через http server
 
 app.use(express.json())
-app.use(express.urlencoded({ extended: true })); //
 
 const rooms = new Map(); // емуляция БД с помощью обьекта Map
 
 app.get('/rooms/:id', (req, res) => {
     const { id: roomId } = req.params;
-    const obj = rooms.has(roomId) ? { // проверяем есть такая комната или нет, если есть возвращаем обьект
+    const obj = rooms.has(roomId) ? { // проверяется есть такая комната или нет, если есть возвращается обьект
         users: [...rooms.get(roomId).get('users').values()],
         messages: [...rooms.get(roomId).get('users').values()],
-    } : { users: [], messages: [] }; // если комнаты нет возвращаем пустые значения
+    } : { users: [], messages: [] }; // если комнаты нет возвращается пустые значения
     res.json(obj);
 });
 
@@ -35,17 +34,23 @@ io.on('connection', (socket) => {  // когда к socket_ам подключи
         socket.join(roomId);
         rooms.get(roomId).get('users').set(socket.id, userName);
         const users = [...rooms.get(roomId).get('users').values()];
-        socket.to(roomId).broadcast.emit('ROOM:JOINED', users);
+        socket.to(roomId).broadcast.emit('ROOM:SET_USERS', users);
     });
 
     socket.on('ROOM:NEW_MESSAGE', ({ roomId, userName, text }) => {
-        rooms.get(roomId).get('users').set(socket.id, userName);
+        const obj = { 
+            userName,
+            text
+        }
+
+        rooms.get(roomId).get('users').push(obj); // добавляется сообщение в комнату 
+        socket.to(roomId).broadcast.emit('ROOM:NEW_MESSAGES', obj); // сообщение отправляется всем сокетам
     });
 
     socket.on('disconnect', () => {
         rooms.forEach((value, roomId) => {
             if(value.get('users').delete(socket.id)) {
-                const users = [...rooms.get(roomId).get('users').values()];
+                const users = [...value.get(roomId).get('users').values()];
                 socket.to(roomId).broadcast.emit('ROOM:SET_USERS', users);
             }
         })
@@ -56,7 +61,7 @@ io.on('connection', (socket) => {  // когда к socket_ам подключи
 
 
 
-server.listen(5000, (err) => { // приложение будет работать через port
+server.listen(9999, (err) => { // приложение будет работать через port
     if (err) {
         throw Error(err);
     }

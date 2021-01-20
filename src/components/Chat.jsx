@@ -1,22 +1,44 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
+import socket from '../socket'
 
-export default memo(({users, messages}) => {
+export const Chat = memo(({ users, messages, userName, roomId, onAddMessage }) => {
+
   const [messageValue, setMessageValue] = useState()
+
+  const messageRef = useRef(null);
+
+  useEffect(() => {
+    messageRef.current.scrollTo(0, 999999)
+  }, [messages])
+
+  const onSendMessage = useCallback(() => {
+    socket.emit('ROOM:NEW_MESSAGE', { 
+      userName,
+      roomId,
+      text: messageValue
+    })
+    onAddMessage({
+      userName,
+      text: messageValue
+    })
+    setMessageValue('');
+  }, [messageValue, userName, roomId, onAddMessage])
 
   return (
     <div className="chat">
       <div className="chat-users">
+      <h4>Комната: {roomId}</h4>
+      <hr/>
         <b>Онлайн ({users.length}):</b>
         <ul>
           {users.map((name, index) => (
             <li key={name + index}>{name}</li>))}
         </ul>
       </div>
-
       <div className="chat-messages">
-        <div className="messages">
-          {messages.map((message) => (
-            <div className="message">
+        <div ref={messageRef} className="messages">
+          {messages.map((message, index) => (
+            <div key={`${message.text} + ${message.user}` + index} className="message">
               <p>{message.text}</p>
             <div>
               <span>{message.username}</span>
@@ -24,14 +46,13 @@ export default memo(({users, messages}) => {
             </div>
             ))}
         </div>
-
               <form>
           <textarea
            value={messageValue}
-           onChange={(event) => setMessageValue(event.target.value)}
+           onChange={(e) => setMessageValue(e.target.value)}
            className="form-control"
            rows="3"/>
-          <button type="button" className="btn btn-primary">Отправить</button>
+          <button onClick={onSendMessage} type="button" className="btn btn-primary">Отправить</button>
         </form>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const JoinBlock = ({ onLogin }) => {
+export const JoinBlock = ({ onLogin }) => {
   const [ roomId, setRoomID ] = useState('');
   const [ userName, setUserName ] = useState('');
   const [ isLoading, setLoading ] = useState(false);
@@ -10,10 +10,10 @@ const JoinBlock = ({ onLogin }) => {
     if (!roomId || !userName) {
       return alert('Неверные данные');
     }
-    const data = { roomId, userName }
+    const obj = { roomId, userName }
     setLoading(true);
-    await axios.post('/rooms', data)
-    onLogin(data)
+    await axios.post('/rooms', obj)
+    onLogin(obj)
   };
 
     return(
@@ -22,13 +22,13 @@ const JoinBlock = ({ onLogin }) => {
               type="text"
               placeholder="ID комнаты"
               value={roomId} // затем значение из state попадает как value в input
-              onChange={(event) => setRoomID(event.target.value)} // сначала значение по onChange попадает в переменную в state
+              onChange={(e) => setRoomID(e.target.value)} // сначала значение по onChange попадает в переменную в state
             />
             <input
               type="text"
               placeholder="Ваше имя"
               value={userName}
-              onChange={(event) => setUserName(event.target.value)}
+              onChange={(e) => setUserName(e.target.value)}
             />
             <button
               disabled={isLoading}
@@ -38,5 +38,3 @@ const JoinBlock = ({ onLogin }) => {
         </div>
     )
 }
-
-export default JoinBlock;

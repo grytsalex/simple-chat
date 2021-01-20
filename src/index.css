@@ -44,7 +44,7 @@
 .chat-users {
   border-right: 1px solid rgba(159, 183, 197, 0.1);
   padding: 20px;
-  width: 200px;
+  width: 220px;
   background-color: #f6f9fa;
 }
 
@@ -58,6 +58,8 @@
 
 .message {
   flex: 1;
+  height: calc(100% - 155px);
+  overflow: auto;
 }
 
 .message {
