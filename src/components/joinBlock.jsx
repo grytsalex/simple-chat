@@ -8,7 +8,7 @@ export const JoinBlock = ({ onLogin }) => {
 
   const onEnter = async () => {
     if (!roomId || !userName) {
-      return alert('Неверные данные');
+      return alert('Incorrect data');
     }
     const obj = { roomId, userName }
     setLoading(true);
@@ -34,7 +34,7 @@ export const JoinBlock = ({ onLogin }) => {
               disabled={isLoading}
               className="btn btn-success"
               onClick={onEnter}
-              >{isLoading ? 'Вход...' : 'Войти'}</button>
+              >{isLoading ? 'Enter...' : 'Enter'}</button>
         </div>
     )
 }

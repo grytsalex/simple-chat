@@ -5,10 +5,10 @@ export const Chat = memo(({ users, messages, userName, roomId, onAddMessage }) =
 
   const [messageValue, setMessageValue] = useState()
 
-  const messageRef = useRef(null);
+  const messagesRef = useRef(null);
 
   useEffect(() => {
-    messageRef.current.scrollTo(0, 999999)
+    messagesRef.current.scrollTo(0, 999999)
   }, [messages])
 
   const onSendMessage = useCallback(() => {
@@ -36,7 +36,7 @@ export const Chat = memo(({ users, messages, userName, roomId, onAddMessage }) =
         </ul>
       </div>
       <div className="chat-messages">
-        <div ref={messageRef} className="messages">
+        <div ref={messagesRef} className="messages">
           {messages.map((message, index) => (
             <div key={`${message.text} + ${message.user}` + index} className="message">
               <p>{message.text}</p>
@@ -52,7 +52,7 @@ export const Chat = memo(({ users, messages, userName, roomId, onAddMessage }) =
            onChange={(e) => setMessageValue(e.target.value)}
            className="form-control"
            rows="3"/>
-          <button onClick={onSendMessage} type="button" className="btn btn-primary">Отправить</button>
+          <button onClick={onSendMessage} type="button" className="btn btn-primary">Send</button>
         </form>
       </div>
     </div>

@@ -1,6 +1,6 @@
 const express = require('express'); // подключается express
 const app = express(); // создаеться express приложение
-const server = require('http').createServer(app); //  создаеться http server
+const server = require('http').Server(app); //  создаеться http server
 const io =  require('socket.io')(server); // создаеться socket который будет работать через http server
 
 app.use(express.json())
@@ -17,7 +17,7 @@ app.get('/rooms/:id', (req, res) => {
 });
 
 app.post('/rooms', (req, res) => {
-    const { roomId, userName } = req.body;
+    const { roomId } = req.body;
     if(!rooms.has(roomId)) { // если комнаты нет - она создается
         rooms.set(
           roomId,
@@ -43,14 +43,14 @@ io.on('connection', (socket) => {  // когда к socket_ам подключи
             text
         }
 
-        rooms.get(roomId).get('users').push(obj); // добавляется сообщение в комнату 
-        socket.to(roomId).broadcast.emit('ROOM:NEW_MESSAGES', obj); // сообщение отправляется всем сокетам
+        rooms.get(roomId).get('messages').push(obj); // добавляется сообщение в комнату 
+        socket.to(roomId).broadcast.emit('ROOM:NEW_MESSAGE', obj); // сообщение отправляется всем сокетам
     });
 
     socket.on('disconnect', () => {
         rooms.forEach((value, roomId) => {
             if(value.get('users').delete(socket.id)) {
-                const users = [...value.get(roomId).get('users').values()];
+                const users = [...value.get('users').values()];
                 socket.to(roomId).broadcast.emit('ROOM:SET_USERS', users);
             }
         })
@@ -65,5 +65,5 @@ server.listen(9999, (err) => { // приложение будет работат
     if (err) {
         throw Error(err);
     }
-    console.log("App listening on port 5000");
+    console.log("Server is running!");
 });

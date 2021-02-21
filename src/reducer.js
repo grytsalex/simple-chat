@@ -22,8 +22,6 @@ export default (state, action) => {
       };
 
     case 'NEW_MESSAGE':
-      console.log('action.payload', action.payload)
-      console.log('state.messages', state.messages)
       return {
         ...state,
         messages: [...state.messages, action.payload] // создается новый массив в котором все старые сообщения плюс новое которое прилетит в пейлоаде
