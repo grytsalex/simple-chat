@@ -11,7 +11,7 @@ app.get('/rooms/:id', (req, res) => {
     const { id: roomId } = req.params;
     const obj = rooms.has(roomId) ? { // проверяется есть такая комната или нет, если есть возвращается обьект
         users: [...rooms.get(roomId).get('users').values()],
-        messages: [...rooms.get(roomId).get('users').values()],
+        messages: [...rooms.get(roomId).get('messages').values()],
     } : { users: [], messages: [] }; // если комнаты нет возвращается пустые значения
     res.json(obj);
 });
